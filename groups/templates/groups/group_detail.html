@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>{{group.name}}</h1>
+<h2>{{group.description}}</h2>
+{% if group.questions.count == 0 %}
+<h2>No questions in this group</h2>
+{% else %}
+{% for question in group.questions.all %} <!-- Need for loop to go through each one -->
+	<a href="{% url 'questions:question_single' slug=question.slug %}">{{question.name}}</a> <!-- This is used to inject a html file into the middle of this block, similar to extends -->	
+{% endfor %} <!-- the underscore tells people that the html file is going to be injected we do this because lots of content to call template tags etc. -->
+{% endif %}
+</div>
+
+{% endblock %}
