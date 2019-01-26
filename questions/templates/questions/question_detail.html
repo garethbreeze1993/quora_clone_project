@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-{{ question.author }}
+<a href ="{% url 'accounts:profile' slug=question.author.slug %}">{{ question.author }}</a>
 {{ question.name }}
 {% if user.is_authenticated and question.author == user %}
 <a href="{% url 'questions:update_question' slug=question.slug %}" class="btn btn-small btn-warning">Edit Post</a>

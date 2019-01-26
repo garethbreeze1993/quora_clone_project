@@ -5,7 +5,12 @@ from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
 from questions.models import Question, Answer
+from accounts.models import User
 from questions.forms import QuestionForm, AnswerForm
+from django.http import Http404
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 class QuestionList(ListView):
 	model = Question
@@ -62,8 +67,30 @@ class DeleteAnswer(LoginRequiredMixin, DeleteView):
 	model = Answer
 	success_url = reverse_lazy('home')
 	
+
+class UserProfile(DetailView):	
+	template_name = 'questions/user_profile.html'
+	model = User
+	
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['user_quest'] = Question.objects.all()
+		context['user_ans'] = Answer.objects.all()
+		return context
+
+
+	
+def UserProfileQuestion(request,slug):
+	user = request.user
+	user_question = Question.objects.filter(author=request.user).order_by('-created_date')
+	user_answer = Answer.objects.filter(author=request.user).order_by('-created_date')
+	return render(request, 'questions/_question.html', {'user_question':user_question,'user_answer':user_answer, 'user': user})
 	
 
+			
+			
+	
+	
 
 
 	

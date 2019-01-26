@@ -14,14 +14,14 @@ class User(AbstractUser):
 
 	
 	def display_name(self):
-		self.display_name = self.first_name.title() + ' ' + self.lastname
-		return self.display_name
+		return self.first_name + ' ' + self.lastname
+		
 
 	def __str__(self):
 		return self.username
 
 	def save(self,*args,**kwargs):
-		self.slug = slugify(self.display_name) # when person types in group name with spaces this slugify will
+		self.slug = slugify(self.first_name+self.last_name) # when person types in group name with spaces this slugify will
 	# change the name so it can be used in URL by browser	
 		super().save(*args,**kwargs)
 

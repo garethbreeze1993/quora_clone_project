@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+{{user.username}} 's profile
+{{user.first_name }} {{user.last_name}}
+{{ user.bio }}
+
+{% if user.image %}
+<img src = "{{user.image.url}}" class = "img-fluid" height=150 width=150 alt='No Image Uploaded'>
+					{% else %}
+								<p>No file uploaded</p>
+			{% endif %}
+{{user.location}}
+
+
+<a href = "{% url 'accounts:profile_question' slug=user.slug %}">List of Questions for this user</a>
+
+{% endblock %}
