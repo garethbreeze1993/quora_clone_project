@@ -79,13 +79,12 @@ class UserProfile(DetailView):
 		return context
 
 
-	
-def UserProfileQuestion(request,slug):
-	user = request.user
-	user_question = Question.objects.filter(author=request.user).order_by('-created_date')
-	user_answer = Answer.objects.filter(author=request.user).order_by('-created_date')
+def UserProfileQuestion(request, slug):
+	user = User.objects.get(slug=slug)
+	user_question = Question.objects.filter(author=user).order_by('-created_date')
+	user_answer = Answer.objects.filter(author=user).order_by('-created_date')
 	return render(request, 'questions/_question.html', {'user_question':user_question,'user_answer':user_answer, 'user': user})
-	
+
 
 			
 			
