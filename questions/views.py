@@ -68,25 +68,33 @@ class DeleteAnswer(LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('home')
 	
 
-class UserProfile(DetailView):	
-	template_name = 'questions/user_profile.html'
-	model = User
-	
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['user_quest'] = Question.objects.all()
-		context['user_ans'] = Answer.objects.all()
-		return context
-
-
 def UserProfileQuestion(request, slug):
 	user = User.objects.get(slug=slug)
 	user_question = Question.objects.filter(author=user).order_by('-created_date')
 	user_answer = Answer.objects.filter(author=user).order_by('-created_date')
-	return render(request, 'questions/_question.html', {'user_question':user_question,'user_answer':user_answer, 'user': user})
+	return render(request, 'questions/user_profile.html', {'user_question':user_question,'user_answer':user_answer, 'user': user})
 
-
-			
+@login_required
+def question_solved(request,slug):
+	question = get_object_or_404(Question,slug=slug)
+	question.question_solved()
+	return redirect('questions:question_single',slug=question.slug)
+	
+	
+'''
+class UserProfile(DetailView):	
+	template_name = 'questions/user_profile.html'
+	model = User
+	#slug_url_kwarg = 'slug'
+	#userr = User.objects.get(slug=slug_url_kwarg)
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		slug = self.kwargs['slug']
+		context['userr'] = User.objects.get(slug)
+		context['user_quest'] = Question.objects.filter(author=User.objects.get(slug)).order_by('-created_date')
+		context['user_ans'] = Answer.objects.filter(author=User.objects.get(slug)).order_by('-created_date')		
+		return context
+'''			
 			
 	
 	

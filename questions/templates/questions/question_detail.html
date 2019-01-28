@@ -19,6 +19,15 @@
 <h3>Please sign in to add an answer</h3>
 {% endif %}
 
+{% if user.is_authenticated and question.author == user %}
+	<a class="btn btn-primary" href="{% url 'questions:question_solved' slug=question.slug %}">Solved</a>
+{% endif %}
+
+{% if question.question_solved %}
+	<h5>Question has been solved </h5>
+{% endif %}	
+<h2>Answers to this question</h2>
+
 {% for answer in question.answers.all %} <!-- This is from the related name 'comments' that we get from the post models.py. We use the related name comments -->
 	{{answer.body}}
 	<br/>

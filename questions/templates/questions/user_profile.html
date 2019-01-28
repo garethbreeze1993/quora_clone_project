@@ -12,5 +12,20 @@
 {{user.location}}
 
 
-<a href = "{% url 'accounts:profile_question' slug=user.slug %}">List of Questions for this user</a>
+
+<h2>Questions</h2>
+{% for question in user_question %}
+
+	{{question.name}}
+	{{question.author}}
+	{{question.body}}
+	
+	
+{% endfor %}
+<h2>Answers</h2>
+{% for answer in user_answer %}
+
+	{{answer.body}}
+	
+{% endfor %}
 {% endblock %}
