@@ -6,8 +6,7 @@
 <a href="{% url 'questions:update_question' slug=question.slug %}" class="btn btn-small btn-warning">Edit Post</a>
 <a href="{% url 'questions:delete_question' slug=question.slug %}" class="btn btn-small btn-danger">Delete Post</a>
 {% endif %}
-{% if user.is_authenticated %}
-
+{% if user.is_authenticated and question.solved == False %}
 <div class = 'answer_form'>
 	<form method='POST'>
 		{% csrf_token %}
@@ -15,25 +14,27 @@
 	<input type="Submit" class="btn btn-success" value="Add Answer">
 	</form>
 </div> 
-{% else %}
-<h3>Please sign in to add an answer</h3>
 {% endif %}
 
-{% if user.is_authenticated and question.author == user %}
+
+{% if user.is_authenticated and question.author == user and question.solved == False %}
 	<a class="btn btn-primary" href="{% url 'questions:question_solved' slug=question.slug %}">Solved</a>
 {% endif %}
 
-{% if question.question_solved %}
+{% if question.solved %}
 	<h5>Question has been solved </h5>
+{% else %}
+		<h5>Not been slved yet</h5>
 {% endif %}	
 <h2>Answers to this question</h2>
 
 {% for answer in question.answers.all %} <!-- This is from the related name 'comments' that we get from the post models.py. We use the related name comments -->
-	{{answer.body}}
+	{{answer.body}} 
 	<br/>
 	{% if user.is_authenticated and answer.author == user %}
 	<a href ="{% url 'questions:remove_answer' pk=answer.pk %}" class="btn btn-small btn-danger">Delete</a>
 
 	{% endif %}
-{% endfor %}	
+{% endfor %}
+
 {% endblock %}

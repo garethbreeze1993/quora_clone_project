@@ -79,6 +79,8 @@ def question_solved(request,slug):
 	question = get_object_or_404(Question,slug=slug)
 	question.question_solved()
 	return redirect('questions:question_single',slug=question.slug)
+
+	
 	
 	
 '''
