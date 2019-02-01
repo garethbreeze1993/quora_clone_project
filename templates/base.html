@@ -8,9 +8,9 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 <a class="navbar-brand" href="{% url 'home' %}">Quora</a>
-<form class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+	<form class="form-inline my-2 my-lg-0" method='GET' action="{% url 'questions:search_quests' %}">
+      <input class="form-control mr-sm-2" type="search" name = 'q' placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
 	{% if user.is_authenticated %}
 	  <li class="nav-item">

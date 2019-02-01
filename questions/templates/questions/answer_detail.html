@@ -1,0 +1,15 @@
+{{answer.body}}
+	
+{% if user.is_authenticated %}
+		<a href="javascript:{document.getElementById('upvote').submit()}"><button class = "btn btn-primary btn-small">Upvote Current Likes = {{answer.likes}}</button></a>
+	{% endif %}	
+	
+<form id="upvote" method = "POST" action="{% url 'questions:upvote' pk=answer.pk %}">
+{% csrf_token %}
+<input type = "hidden">
+</form>
+
+	<br/>
+	{% if user.is_authenticated and answer.author == user %}
+	<a href ="{% url 'questions:remove_answer' pk=answer.pk %}" class="btn btn-small btn-danger">Delete</a>
+	{% endif %}

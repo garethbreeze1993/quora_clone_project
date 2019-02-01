@@ -28,13 +28,15 @@
 {% endif %}	
 <h2>Answers to this question</h2>
 
-{% for answer in question.answers.all %} <!-- This is from the related name 'comments' that we get from the post models.py. We use the related name comments -->
+{% for answer in question.answers.all %} 
 	{{answer.body}} 
-	<br/>
-	{% if user.is_authenticated and answer.author == user %}
-	<a href ="{% url 'questions:remove_answer' pk=answer.pk %}" class="btn btn-small btn-danger">Delete</a>
 
-	{% endif %}
+<a href="{% url 'questions:ans_single' pk=answer.pk %}">DETAIL</a>	
+{{answer.likes}}
+	
+
+
+	
+	
 {% endfor %}
-
 {% endblock %}

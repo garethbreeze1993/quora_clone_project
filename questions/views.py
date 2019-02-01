@@ -8,6 +8,7 @@ from questions.models import Question, Answer
 from accounts.models import User
 from questions.forms import QuestionForm, AnswerForm
 from django.http import Http404
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -67,6 +68,23 @@ class DeleteAnswer(LoginRequiredMixin, DeleteView):
 	model = Answer
 	success_url = reverse_lazy('home')
 	
+class DetailAnswer(DetailView):
+	model = Answer
+	template_name = 'questions/answer_detail.html'
+	
+class SearchQuests(ListView):
+	model = Question
+	template_name = 'question/question_list.html'
+	
+	def get_queryset(self):
+		result = super(SearchQuests,self).get_queryset()
+		
+		query = self.request.GET.get('q')
+		
+		results = Question.objects.filter(Q(name__icontains=query))
+		
+		return results
+	
 
 def UserProfileQuestion(request, slug):
 	user = User.objects.get(slug=slug)
@@ -80,23 +98,16 @@ def question_solved(request,slug):
 	question.question_solved()
 	return redirect('questions:question_single',slug=question.slug)
 
+@login_required	
+def upvote(request,pk):
+	answer = get_object_or_404(Answer, pk=pk)
+	answer.likes += 1
+	answer.save()
+	return redirect('questions:question_single',slug=answer.question.slug)	
 	
 	
-	
-'''
-class UserProfile(DetailView):	
-	template_name = 'questions/user_profile.html'
-	model = User
-	#slug_url_kwarg = 'slug'
-	#userr = User.objects.get(slug=slug_url_kwarg)
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		slug = self.kwargs['slug']
-		context['userr'] = User.objects.get(slug)
-		context['user_quest'] = Question.objects.filter(author=User.objects.get(slug)).order_by('-created_date')
-		context['user_ans'] = Answer.objects.filter(author=User.objects.get(slug)).order_by('-created_date')		
-		return context
-'''			
+
+		
 			
 	
 	
