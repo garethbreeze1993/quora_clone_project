@@ -46,7 +46,7 @@ class Answer(models.Model):
 		return reverse('question:question_detail', kwargs = {'slug':self.question.slug})
 		
 	class Meta:
-		ordering = ['likes']	
+		ordering = ['-likes']	
 	
 	
 	

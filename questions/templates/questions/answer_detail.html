@@ -1,8 +1,16 @@
-{{answer.body}}
+{% extends 'base.html' %}
+{% block content %}
+<h5> This is the answer you have selected: {{answer.body}}
+<br/>
+This is for the question: {{answer.question.name}}
+<br/>
+Use the buttons below to either confirm liking this post or go back to the question</h5>
 	
 {% if user.is_authenticated %}
-		<a href="javascript:{document.getElementById('upvote').submit()}"><button class = "btn btn-primary btn-small">Upvote Current Likes = {{answer.likes}}</button></a>
+		<a href="javascript:{document.getElementById('upvote').submit()}"><button class = "btn btn-primary btn-small">Confirm Liking this answer</button></a>
 	{% endif %}	
+	
+	<a href="{% url 'questions:question_single' slug=answer.question.slug %}" class="btn btn-warning btn-small">Take me back to the Question</a>
 	
 <form id="upvote" method = "POST" action="{% url 'questions:upvote' pk=answer.pk %}">
 {% csrf_token %}
@@ -13,3 +21,4 @@
 	{% if user.is_authenticated and answer.author == user %}
 	<a href ="{% url 'questions:remove_answer' pk=answer.pk %}" class="btn btn-small btn-danger">Delete</a>
 	{% endif %}
+{% endblock %}	

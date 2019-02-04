@@ -1,31 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-{{user.username}} 's profile
-{{user.first_name }} {{user.last_name}}
-{{ user.bio }}
-
+<h1>{{user.username}} 's profile</h1>
+<h2>Name: {{user.first_name }} {{user.last_name}}</h2>
+<h2>Bio: {{ user.bio }}</h2>
+<hr>
 {% if user.image %}
 <img src = "{{user.image.url}}" class = "img-fluid" height=150 width=150 alt='No Image Uploaded'>
 					{% else %}
 								<p>No file uploaded</p>
 			{% endif %}
-{{user.location}}
+<h2>Location:{{user.location}}</h2>
 
 
 
-<h2>Questions</h2>
+<h2>List of Questions asked by this user</h2>
 {% for question in user_question %}
 
-	{{question.name}}
-	{{question.author}}
-	{{question.body}}
+	<a href="{% url 'questions:question_single' slug=question.slug%}">{{question.name}}</a>
+	
 	
 	
 {% endfor %}
-<h2>Answers</h2>
+<h2>List of Answers made by this user</h2>
 {% for answer in user_answer %}
 
-	{{answer.body}}
+	<a href="{% url 'questions:question_single' slug=answer.question.slug %}">{{answer.body}}</a>
 	
 {% endfor %}
 {% endblock %}

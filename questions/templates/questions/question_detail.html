@@ -31,8 +31,8 @@
 {% for answer in question.answers.all %} 
 	{{answer.body}} 
 
-<a href="{% url 'questions:ans_single' pk=answer.pk %}">DETAIL</a>	
-{{answer.likes}}
+<a href="{% url 'questions:ans_single' pk=answer.pk %}">​<i class="fa fa-thumbs-o-up" style="font-size:36px"></i></a>	
+<p>Likes: {{answer.likes}}</p>
 	
 
 

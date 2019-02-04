@@ -71,19 +71,33 @@ class DeleteAnswer(LoginRequiredMixin, DeleteView):
 class DetailAnswer(DetailView):
 	model = Answer
 	template_name = 'questions/answer_detail.html'
-	
+'''	
 class SearchQuests(ListView):
 	model = Question
 	template_name = 'question/question_list.html'
 	
 	def get_queryset(self):
-		result = super(SearchQuests,self).get_queryset()
+		results = super(SearchQuests,self).get_queryset()
 		
 		query = self.request.GET.get('q')
 		
 		results = Question.objects.filter(Q(name__icontains=query))
 		
 		return results
+	'''	
+		
+def SearchQuests(request):
+	if request.method == 'GET':
+		query = request.GET.get('q')
+		
+		results = Question.objects.filter(name__icontains=query)
+	
+		return render(request,'questions/question_list.html',{'results':results})
+	else:
+		return render(request,'questions/question_list.html')
+		
+	
+	
 	
 
 def UserProfileQuestion(request, slug):
