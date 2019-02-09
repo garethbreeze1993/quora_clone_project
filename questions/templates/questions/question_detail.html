@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load staticfiles %}
 <h1>{{ question.name }}</h1> <!-- centre this -->
 <hr>
 <br/>
@@ -7,17 +8,21 @@
 <br/>
 <div class="row"> <!-- Push these buttons together in CSS --> 
 <div class="col">
-{% if user.is_authenticated and question.author == user %}
+{% if question.author == user %}
 <a href="{% url 'questions:update_question' slug=question.slug %}" class="btn btn-small btn-warning">Edit Post</a>
 </div>
 <div class="col">
-{% if user.is_authenticated and question.author == user and question.solved == False %}
-	<a class="btn btn-primary" href="{% url 'questions:question_solved' slug=question.slug %}">Solved</a>
-{% endif %}
-</div>
 <a href="{% url 'questions:delete_question' slug=question.slug %}" class="btn btn-small btn-danger">Delete Post</a>
 </div>
 {% endif %}
+<div class="col">
+{% if question.author == user and question.solved == False %}
+	<a class="btn btn-primary" href="{% url 'questions:question_solved' slug=question.slug %}">Solved</a>
+{% endif %}
+</div>
+</div>
+<hr>
+<div class="container">
 <div class='row'>
 <div class="col">
 <a href ="{% url 'accounts:profile' slug=question.author.slug %}">{{ question.author }}</a>
@@ -26,21 +31,40 @@
 {{question.created_date}}
 </div>
 </div>
-
-
+<br/>
 {% if question.solved %}
-	<h5>Question has been solved </h5>
-{% else %}
-		<h5>Not been slved yet</h5>
+	<img src="{% static 'solved.png' %}" class = "img-fluid mx-auto d-block" height=100 width=100>
 {% endif %}	
+<hr>
+
+</div>
+<div class='container'>
 <h2>Answers to this question</h2>
 
-{% for answer in question.answers.all|slice:":10" %} <!-- Try and only slice by 10 if unable to do, otherwise you can add pagination --> 
-	{{answer.body}} 
+{% if question.solved %}
+<br/>
+	<h5>Question has been solved </h5>
+	{% for answer in question.answers.all|slice:":10" %}  
+	{{answer.body}}
+	<a href="{% url 'questions:ans_single' pk=answer.pk %}">​<i class="fa fa-thumbs-o-up" style="font-size:36px"></i></a>	
+<p>Author: {{answer.author}}	Likes: {{answer.likes}}</p>
+	{% endfor %}
+{% else %}
+	{% for answer in question.answers.all %}
+	{{answer.body}}
+	<a href="{% url 'questions:ans_single' pk=answer.pk %}">​<i class="fa fa-thumbs-o-up" style="font-size:36px"></i></a>	
+	<p>Author: {{answer.author}}	Likes: {{answer.likes}}</p>
+	{% endfor %}
+	
+		<h5>Not been slved yet</h5>		
+		
+{% endif %}	
+</div>
 
-<a href="{% url 'questions:ans_single' pk=answer.pk %}">​<i class="fa fa-thumbs-o-up" style="font-size:36px"></i></a>	
-<p>Likes: {{answer.likes}}</p>
-{% endfor %}
+ 
+
+
+
 {% if user.is_authenticated and question.solved == False %}
 <div class = 'answer_form'>
 	<form method='POST'>
@@ -49,5 +73,6 @@
 	<input type="Submit" class="btn btn-success" value="Add Answer">
 	</form>
 </div> 
-{% endif %}	
+{% endif %}
+	
 {% endblock %}

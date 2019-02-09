@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import FormMixin
+from django.views.generic.list import MultipleObjectMixin
+from django.core.paginator import Paginator
 from questions.models import Question, Answer
 from accounts.models import User
 from questions.forms import QuestionForm, AnswerForm
@@ -19,7 +21,6 @@ class QuestionList(ListView):
 	
 class QuestionDetail(FormMixin,DetailView):
 	model = Question
-	
 	form_class = AnswerForm
 	
 	def get_success_url(self):
@@ -71,21 +72,7 @@ class DeleteAnswer(LoginRequiredMixin, DeleteView):
 class DetailAnswer(DetailView):
 	model = Answer
 	template_name = 'questions/answer_detail.html'
-'''	
-class SearchQuests(ListView):
-	model = Question
-	template_name = 'question/question_list.html'
-	
-	def get_queryset(self):
-		results = super(SearchQuests,self).get_queryset()
-		
-		query = self.request.GET.get('q')
-		
-		results = Question.objects.filter(Q(name__icontains=query))
-		
-		return results
-	'''	
-		
+
 def SearchQuests(request):
 	if request.method == 'GET':
 		query = request.GET.get('q')
@@ -104,6 +91,10 @@ def UserProfileQuestion(request, slug):
 	user = User.objects.get(slug=slug)
 	user_question = Question.objects.filter(author=user).order_by('-created_date')
 	user_answer = Answer.objects.filter(author=user).order_by('-created_date')
+	#paginator = Paginator(user_question, 2)
+	#page = request.GET.get('page')
+    #questions = paginator.get_page(page)
+	# change context dictionary
 	return render(request, 'questions/user_profile.html', {'user_question':user_question,'user_answer':user_answer, 'user': user})
 
 @login_required
