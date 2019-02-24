@@ -90,12 +90,18 @@ def SearchQuests(request):
 def UserProfileQuestion(request, slug):
 	user = User.objects.get(slug=slug)
 	user_question = Question.objects.filter(author=user).order_by('-created_date')
+	paginator = Paginator(user_question, 2)
+	page = request.GET.get('page')
+	questions = paginator.get_page(page)
+	
 	user_answer = Answer.objects.filter(author=user).order_by('-created_date')
-	#paginator = Paginator(user_question, 2)
-	#page = request.GET.get('page')
-    #questions = paginator.get_page(page)
-	# change context dictionary
-	return render(request, 'questions/user_profile.html', {'user_question':user_question,'user_answer':user_answer, 'user': user})
+	
+	paginatorAnswer = Paginator(user_answer, 3)
+	pageAns = request.GET.get('page2')
+	answers = paginatorAnswer.get_page(pageAns)
+	
+	
+	return render(request,'questions/user_profile2.html',{'user_question':questions,'user_answer':answers,'user': user})
 
 @login_required
 def question_solved(request,slug):

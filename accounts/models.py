@@ -6,7 +6,7 @@ class User(AbstractUser):
 	first_name = models.CharField(max_length=30)
 	last_name = models.CharField(max_length=30)
 	bio = models.CharField(max_length=240, blank=True)
-	image = models.ImageField(upload_to = 'avatars/', blank=True)
+	image = models.ImageField(blank = True, upload_to = 'avatars/')
 	location = models.CharField(max_length=30, blank=True)
 	slug = models.SlugField(allow_unicode=True, unique=True)
 	

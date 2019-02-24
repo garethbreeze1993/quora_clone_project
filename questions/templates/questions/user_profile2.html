@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{user.username}} 's profile</h1>
+<h2>Name: {{user.first_name }} {{user.last_name}}</h2>
+<h2>Bio: {{ user.bio }}</h2>
+<hr>
+{% if user.image %}
+<img src = "{{user.image.url}}" class = "img-fluid" height=150 width=150 alt='No Image Uploaded'>
+					{% else %}
+								<p>No file uploaded</p>
+			{% endif %}
+<h2>Location:{{user.location}}</h2>
+
+
+
+<h2>List of Questions asked by this user</h2>
+{% for question in user_question %}
+
+	<a href="{% url 'questions:question_single' slug=question.slug%}">{{question.name}}</a>
+	<br/> 
+	
+	
+	
+{% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if user_question.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ user_question.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ user_question.number }} of {{ user_question.paginator.num_pages }}.
+        </span>
+
+        {% if user_question.has_next %}
+            <a href="?page={{ user_question.next_page_number }}">next</a>
+            <a href="?page={{ user_question.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<h2>List of Answers made by this user</h2>
+
+{% for answer in user_answer %}
+
+	<a href="{% url 'questions:question_single' slug=answer.question.slug %}">{{answer.body}}</a>
+	<br/> 
+	
+
+{% endfor %}
+
+<div class="paginationans">
+    <span class="step-links">
+        {% if user_answer.has_previous %}
+            <a href="?page2=1">&laquo; first</a>
+            <a href="?page2={{ user_answer.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ user_answer.number }} of {{ user_answer.paginator.num_pages }}.
+        </span>
+
+        {% if user_answer.has_next %}
+            <a href="?page2={{ user_answer.next_page_number }}">next</a>
+            <a href="?page2={{ user_answer.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+
+
+{% endblock %}
